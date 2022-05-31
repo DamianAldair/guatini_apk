@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:guatini/global/main_container.dart';
 
 class AdvancedSearchPage extends StatelessWidget {
   const AdvancedSearchPage({Key? key}) : super(key: key);
@@ -7,11 +8,13 @@ class AdvancedSearchPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(pageTitle),
+    return MainContainer(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(pageTitle),
+        ),
+        body: const Center(child: Text('Búsqueda avanzada')),
       ),
-      body: const Center(child: Text('Búsqueda avanzada')),
     );
   }
 }
