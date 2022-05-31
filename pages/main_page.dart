@@ -10,7 +10,7 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MainContainer(
+    return AdsContainer(
       child: Scaffold(
         appBar: AppBar(
           title: Text(pageTitle),

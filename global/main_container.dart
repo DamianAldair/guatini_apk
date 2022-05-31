@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class MainContainer extends StatelessWidget {
-  const MainContainer({Key? key, required this.child}) : super(key: key);
+class AdsContainer extends StatelessWidget {
+  const AdsContainer({Key? key, required this.child}) : super(key: key);
 
   final Widget child;
 
