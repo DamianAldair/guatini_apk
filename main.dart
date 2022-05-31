@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:guatini/global/appdata.dart' as app_data;
+import 'package:guatini/global/main_container.dart';
 import 'package:guatini/pages/main_page.dart';
 
 void main() {
@@ -18,7 +19,9 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       title: app_data.productName,
-      home: MainPage(),
+      home: MainContainer(
+        child: MainPage(),
+      ),
     );
   }
 }
