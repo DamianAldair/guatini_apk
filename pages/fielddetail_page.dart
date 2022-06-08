@@ -32,64 +32,20 @@ class FieldDetailPage extends StatelessWidget {
                 slivers: [
                   SliverPersistentHeader(
                     floating: true,
-                    delegate: _DescriptionButton(onPressed: () {}),
+                    delegate: _DescriptionButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (BuildContext context) {
+                            return const _DescriptionCard();
+                          },
+                        );
+                      },
+                    ),
                   ),
                   SliverList(
                     delegate: SliverChildListDelegate([
-                      Container(
-                        color: Colors.red,
-                        margin: const EdgeInsets.all(5.0),
-                        height: 50.0,
-                        width: double.infinity,
-                      ),
-                      Container(
-                        color: Colors.red,
-                        margin: const EdgeInsets.all(5.0),
-                        height: 50.0,
-                        width: double.infinity,
-                      ),
-                      Container(
-                        color: Colors.red,
-                        margin: const EdgeInsets.all(5.0),
-                        height: 50.0,
-                        width: double.infinity,
-                      ),
-                      Container(
-                        color: Colors.red,
-                        margin: const EdgeInsets.all(5.0),
-                        height: 50.0,
-                        width: double.infinity,
-                      ),
-                      Container(
-                        color: Colors.red,
-                        margin: const EdgeInsets.all(5.0),
-                        height: 50.0,
-                        width: double.infinity,
-                      ),
-                      Container(
-                        color: Colors.red,
-                        margin: const EdgeInsets.all(5.0),
-                        height: 50.0,
-                        width: double.infinity,
-                      ),
-                      Container(
-                        color: Colors.red,
-                        margin: const EdgeInsets.all(5.0),
-                        height: 50.0,
-                        width: double.infinity,
-                      ),
-                      Container(
-                        color: Colors.red,
-                        margin: const EdgeInsets.all(5.0),
-                        height: 50.0,
-                        width: double.infinity,
-                      ),
-                      Container(
-                        color: Colors.red,
-                        margin: const EdgeInsets.all(5.0),
-                        height: 50.0,
-                        width: double.infinity,
-                      ),
                       Container(
                         color: Colors.red,
                         margin: const EdgeInsets.all(5.0),
@@ -131,9 +87,13 @@ class _DescriptionButton extends SliverPersistentHeaderDelegate {
         vertical: 10.0,
         horizontal: 60.0,
       ),
-      child: FloatingActionButton.extended(
-        elevation: 1.0,
-        label: const Text('Ver descripción'),
+      child: ElevatedButton(
+        child: const Text('Ver descripción'),
+        style: ButtonStyle(
+          shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0)),
+          ),
+        ),
         onPressed: onPressed,
       ),
     );
@@ -148,5 +108,31 @@ class _DescriptionButton extends SliverPersistentHeaderDelegate {
   @override
   bool shouldRebuild(covariant _DescriptionButton oldDelegate) {
     return true;
+  }
+}
+
+class _DescriptionCard extends StatelessWidget {
+  const _DescriptionCard({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Container(
+          alignment: Alignment.center, child: const Text('Descripción')),
+      scrollable: true,
+      elevation: 0.0,
+      insetPadding: const EdgeInsets.all(20.0),
+      alignment: Alignment.topCenter,
+      content: const Text('Esto es una descripción'),
+      actions: [
+        TextButton(
+          child: const Text('Aceptar'),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ],
+      actionsAlignment: MainAxisAlignment.center,
+    );
   }
 }
