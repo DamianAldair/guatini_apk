@@ -14,21 +14,17 @@ class InfoCard extends StatelessWidget {
   const InfoCard({
     Key? key,
     required this.field,
-    this.instance,
-    this.instances,
-  })  : assert(instance == null || instances == null,
-            'Cannot provide both a instance and instances'),
-        _infoCardType = _InfoCardType.normal,
+    required this.instance,
+  })  : _infoCardType = _InfoCardType.normal,
+        instances = null,
         super(key: key);
 
   const InfoCard.extended({
     Key? key,
     required this.field,
-    this.instance,
     this.instances,
-  })  : assert(instance == null || instances == null,
-            'Cannot provide both a instance and instances'),
-        _infoCardType = _InfoCardType.extended,
+  })  : _infoCardType = _InfoCardType.extended,
+        instance = null,
         super(key: key);
 
   @override
