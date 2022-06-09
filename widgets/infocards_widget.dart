@@ -39,7 +39,7 @@ class InfoCard extends StatelessWidget {
         vertical: 7.0,
       ),
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      height: 40.0,
+      height: _infoCardType == _InfoCardType.normal ? 40.0 : null,
       width: double.infinity,
       alignment: Alignment.center,
       decoration: BoxDecoration(
@@ -72,10 +72,13 @@ class InfoCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                Text(
-                  _convertInstancesToSingleString(),
-                  textAlign: TextAlign.justify,
-                  overflow: TextOverflow.ellipsis,
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: Text(
+                    _convertInstancesToSingleString(),
+                    textAlign: TextAlign.justify,
+                    overflow: TextOverflow.clip,
+                  ),
                 ),
               ],
             ),
