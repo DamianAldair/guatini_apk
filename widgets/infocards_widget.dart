@@ -99,7 +99,8 @@ class ConservationStateCard extends StatelessWidget {
   const ConservationStateCard({
     Key? key,
     required this.index,
-  }) : super(key: key);
+  })  : assert(index >= 1 || index <= 9, 'Index must be between 1 and 9.'),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -165,6 +166,7 @@ class ConservationStateCard extends StatelessWidget {
         conservation = 'No evaluado';
         break;
       default:
+        conservation = 'Error al obtener informnación';
         break;
     }
     return conservation;
@@ -172,46 +174,58 @@ class ConservationStateCard extends StatelessWidget {
 
   List<Widget> _getConservationIcon(int index) {
     List<Widget> list = <Widget>[];
-    bool ex = false;
-    bool ew = false;
-    bool ce = false;
-    bool ed = false;
-    bool vu = false;
-    bool nt = false;
-    bool lc = false;
-
-    switch (index) {
-      case 1:
-        ex = true;
-        break;
-      case 2:
-        ew = true;
-        break;
-      case 3:
-        ce = true;
-        break;
-      case 4:
-        ed = true;
-        break;
-      case 5:
-        vu = true;
-        break;
-      case 6:
-        nt = true;
-        break;
-      case 7:
-        lc = true;
-        break;
-      default:
-        break;
+    if (index >= 1 && index <= 7) {
+      bool ex = false;
+      bool ew = false;
+      bool ce = false;
+      bool ed = false;
+      bool vu = false;
+      bool nt = false;
+      bool lc = false;
+      switch (index) {
+        case 1:
+          ex = true;
+          break;
+        case 2:
+          ew = true;
+          break;
+        case 3:
+          ce = true;
+          break;
+        case 4:
+          ed = true;
+          break;
+        case 5:
+          vu = true;
+          break;
+        case 6:
+          nt = true;
+          break;
+        case 7:
+          lc = true;
+          break;
+      }
+      list.add(_extinct(ex));
+      list.add(_extinctInTheWild(ew));
+      list.add(_criticalEndangered(ce));
+      list.add(_endangered(ed));
+      list.add(_vulnerable(vu));
+      list.add(_nearThreataned(nt));
+      list.add(_leastConcern(lc));
+    } else if (index == 8 && index == 9) {
+      bool dd = false;
+      bool ne = false;
+      switch (index) {
+        case 8:
+          dd = true;
+          break;
+        case 9:
+          ne = true;
+          break;
+      }
+      list.add(_deficientData(dd));
+      list.add(_notEvaluated(ne));
     }
-    list.add(_extinct(ex));
-    list.add(_extinctInTheWild(ew));
-    list.add(_criticalEndangered(ce));
-    list.add(_endangered(ed));
-    list.add(_vulnerable(vu));
-    list.add(_nearThreataned(nt));
-    list.add(_leastConcern(lc));
     return list;
   }
 
@@ -399,6 +413,66 @@ class ConservationStateCard extends StatelessWidget {
           color: active
               ? const Color.fromARGB(255, 255, 255, 255)
               : const Color.fromARGB(255, 0, 0, 0),
+        ),
+      ),
+    );
+  }
+
+  Widget _deficientData(bool active) {
+    return Expanded(
+      child: Container(
+        height: 35.0,
+        width: 35.0,
+        margin: const EdgeInsets.only(left: 15.0, right: 8.0),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: active
+              ? const Color.fromARGB(255, 55, 55, 135)
+              : const Color.fromARGB(255, 240, 240, 240),
+          borderRadius: BorderRadius.circular(100.0),
+          border: Border.all(
+            color: active
+                ? const Color.fromARGB(0, 0, 0, 0)
+                : const Color.fromARGB(255, 0, 0, 0),
+          ),
+        ),
+        child: Text(
+          'DD',
+          style: TextStyle(
+            color: active
+                ? const Color.fromARGB(255, 255, 255, 255)
+                : const Color.fromARGB(255, 0, 0, 0),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _notEvaluated(bool active) {
+    return Expanded(
+      child: Container(
+        height: 35.0,
+        width: 35.0,
+        margin: const EdgeInsets.only(left: 8.0, right: 15.0),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: active
+              ? const Color.fromARGB(255, 55, 55, 135)
+              : const Color.fromARGB(255, 240, 240, 240),
+          borderRadius: BorderRadius.circular(100.0),
+          border: Border.all(
+            color: active
+                ? const Color.fromARGB(0, 0, 0, 0)
+                : const Color.fromARGB(255, 0, 0, 0),
+          ),
+        ),
+        child: Text(
+          'NE',
+          style: TextStyle(
+            color: active
+                ? const Color.fromARGB(255, 255, 255, 255)
+                : const Color.fromARGB(255, 0, 0, 0),
+          ),
         ),
       ),
     );
