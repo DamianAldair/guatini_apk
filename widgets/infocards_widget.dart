@@ -22,7 +22,7 @@ class InfoCard extends StatelessWidget {
   const InfoCard.extended({
     Key? key,
     required this.field,
-    this.instances,
+    required this.instances,
   })  : _infoCardType = _InfoCardType.extended,
         instance = null,
         super(key: key);
