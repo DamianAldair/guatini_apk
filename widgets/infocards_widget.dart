@@ -1,14 +1,35 @@
 import 'package:flutter/material.dart';
 
+enum _InfoCardType {
+  normal,
+  extended,
+}
+
 class InfoCard extends StatelessWidget {
   final String field;
-  final String instance;
+  final String? instance;
+  final List<String>? instances;
+  final _InfoCardType _infoCardType;
 
   const InfoCard({
     Key? key,
     required this.field,
-    required this.instance,
-  }) : super(key: key);
+    this.instance,
+    this.instances,
+  })  : assert(instance == null || instances == null,
+            'Cannot provide both a instance and instances'),
+        _infoCardType = _InfoCardType.normal,
+        super(key: key);
+
+  const InfoCard.extended({
+    Key? key,
+    required this.field,
+    this.instance,
+    this.instances,
+  })  : assert(instance == null || instances == null,
+            'Cannot provide both a instance and instances'),
+        _infoCardType = _InfoCardType.extended,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +38,7 @@ class InfoCard extends StatelessWidget {
         horizontal: 15.0,
         vertical: 7.0,
       ),
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
       height: 40.0,
       width: double.infinity,
       alignment: Alignment.center,
@@ -24,15 +46,48 @@ class InfoCard extends StatelessWidget {
         color: Colors.black12,
         borderRadius: BorderRadius.circular(10.0),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(field),
-          const Text(': '),
-          Text(instance),
-        ],
-      ),
+      child: _infoCardType == _InfoCardType.normal
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(field),
+                const Text(': '),
+                Flexible(
+                  child: Text(
+                    instance!,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            )
+          : Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(field),
+                      const Text(':'),
+                    ],
+                  ),
+                ),
+                Text(
+                  _convertInstancesToSingleString(),
+                  textAlign: TextAlign.justify,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
     );
+  }
+
+  String _convertInstancesToSingleString() {
+    String string = '';
+    for (String instance in instances!) {
+      string += '$instance, ';
+    }
+    return string.substring(0, string.length - 2);
   }
 }
 
