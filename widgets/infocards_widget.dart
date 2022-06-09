@@ -95,7 +95,11 @@ class InfoCard extends StatelessWidget {
 }
 
 class ConservationStateCard extends StatelessWidget {
-  const ConservationStateCard({Key? key}) : super(key: key);
+  final int index;
+  const ConservationStateCard({
+    Key? key,
+    required this.index,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -119,11 +123,11 @@ class ConservationStateCard extends StatelessWidget {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: _getConservationIcon(1),
+            children: _getConservationIcon(index),
           ),
           Container(
             padding: const EdgeInsets.symmetric(vertical: 10.0),
-            child: Text(_getConservationText(1)),
+            child: Text(_getConservationText(index)),
           ),
         ],
       ),
