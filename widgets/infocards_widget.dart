@@ -232,7 +232,7 @@ class ConservationStateCard extends StatelessWidget {
         ),
       ),
       child: Text(
-        'EW',
+        'EX',
         style: TextStyle(
           color: active
               ? const Color.fromARGB(255, 207, 52, 52)
