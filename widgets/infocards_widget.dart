@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:guatini/global/tools.dart' as tools;
 
 enum _InfoCardType {
   normal,
@@ -470,6 +471,103 @@ class ConservationStateCard extends StatelessWidget {
                 : const Color.fromARGB(255, 0, 0, 0),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class SoundCard extends StatefulWidget {
+  const SoundCard({Key? key}) : super(key: key);
+
+  @override
+  State<SoundCard> createState() => _SoundCardState();
+}
+
+class _SoundCardState extends State<SoundCard>
+    with SingleTickerProviderStateMixin {
+  bool _isPlaying = false;
+  late AnimationController _soundController;
+  Duration _currentTime = const Duration(microseconds: 0);
+  Duration _totalTime = const Duration(seconds: 30);
+
+  @override
+  void initState() {
+    _soundController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 100),
+    );
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(
+        horizontal: 15.0,
+        vertical: 7.0,
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      height: 110.0,
+      width: double.infinity,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: Colors.black12,
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
+            child: const Text('Sonido:'),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              IconButton(
+                icon: AnimatedIcon(
+                  icon: AnimatedIcons.play_pause,
+                  color: const Color.fromARGB(255, 0, 0, 0),
+                  progress: _soundController,
+                ),
+                onPressed: () {
+                  if (!_isPlaying) {
+                    _soundController.forward();
+                    _isPlaying = true;
+                  } else {
+                    _soundController.reverse();
+                    _isPlaying = false;
+                  }
+                },
+              ),
+              Expanded(
+                child: Column(
+                  children: [
+                    Slider(
+                      value: _currentTime.inMilliseconds.toDouble(),
+                      max: _totalTime.inMilliseconds.toDouble(),
+                      onChanged: (value) {
+                        setState(() {
+                          _currentTime = Duration(milliseconds: value.toInt());
+                        });
+                      },
+                    ),
+                    Row(
+                      children: [
+                        const SizedBox(width: 30.0),
+                        Text(
+                            '${_currentTime.inMinutes}:${tools.convertToTwoDigits(_currentTime.inSeconds)}'),
+                        const Expanded(child: SizedBox()),
+                        Text(
+                            '${_totalTime.inMinutes}:${tools.convertToTwoDigits(_totalTime.inSeconds)}'),
+                        const SizedBox(width: 30.0),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
