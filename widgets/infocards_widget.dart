@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:guatini/global/tools.dart' as tools;
+import 'package:guatini/global/tools.dart';
 
 enum _InfoCardType {
   normal,
@@ -72,7 +73,7 @@ class InfoCard extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
                   child: Text(
-                    _convertInstancesToSingleString(),
+                    convertArrayStringToSingleString(instances!),
                     textAlign: TextAlign.justify,
                     overflow: TextOverflow.clip,
                   ),
@@ -81,23 +82,14 @@ class InfoCard extends StatelessWidget {
             ),
     );
   }
-
-  String _convertInstancesToSingleString() {
-    String string = '';
-    for (String instance in instances!) {
-      string += '$instance, ';
-    }
-    return string.substring(0, string.length - 2);
-  }
 }
 
 class ConservationStateCard extends StatelessWidget {
-  final int index;
+  final int? index;
   const ConservationStateCard({
     Key? key,
     required this.index,
-  })  : assert(index >= 1 || index <= 9, 'Index must be between 1 and 9.'),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -121,11 +113,11 @@ class ConservationStateCard extends StatelessWidget {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: _getConservationIcon(index),
+            children: _getConservationIcon(index!),
           ),
           Container(
             padding: const EdgeInsets.symmetric(vertical: 10.0),
-            child: Text(_getConservationText(index)),
+            child: Text(_getConservationText(index!)),
           ),
         ],
       ),
@@ -488,7 +480,7 @@ class _SoundCardState extends State<SoundCard>
   bool _isPlaying = false;
   late AnimationController _soundController;
   Duration _currentTime = const Duration(microseconds: 0);
-  Duration _totalTime = const Duration(seconds: 30);
+  final Duration _totalTime = const Duration(seconds: 30);
 
   @override
   void initState() {
@@ -570,5 +562,59 @@ class _SoundCardState extends State<SoundCard>
         ],
       ),
     );
+  }
+}
+
+class Description extends StatelessWidget {
+  final String description;
+  const Description({
+    Key? key,
+    required this.description,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(15.0),
+      child: Column(
+        children: [
+          const Padding(
+            padding: EdgeInsets.only(bottom: 8.0),
+            child: Text(
+              'Descripción:',
+              style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Text(
+            description,
+            textAlign: TextAlign.justify,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class Gallery extends StatelessWidget {
+  const Gallery({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        if (snapshot.hasData) {
+          return _createGallery();
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
+      },
+    );
+  }
+
+  Widget _createGallery() {
+    return Container();
   }
 }
