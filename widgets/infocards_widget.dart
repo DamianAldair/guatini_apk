@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:guatini/global/tools.dart' as tools;
-import 'package:guatini/global/tools.dart';
+import 'package:guatini/models/conservationstatus_model.dart';
 
 enum _InfoCardType {
   normal,
   extended,
 }
 
-class InfoCard extends StatelessWidget {
+class InfoCard<T> extends StatelessWidget {
   final String field;
-  final String? instance;
-  final List<String>? instances;
+  final T? instance;
+  final List<T>? instances;
   final _InfoCardType _infoCardType;
 
   const InfoCard({
@@ -52,7 +52,7 @@ class InfoCard extends StatelessWidget {
                 const Text(': '),
                 Flexible(
                   child: Text(
-                    instance!,
+                    instance.toString(),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -73,7 +73,7 @@ class InfoCard extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
                   child: Text(
-                    convertArrayStringToSingleString(instances!),
+                    tools.instancesToString(instances!),
                     textAlign: TextAlign.justify,
                     overflow: TextOverflow.clip,
                   ),
@@ -85,10 +85,10 @@ class InfoCard extends StatelessWidget {
 }
 
 class ConservationStateCard extends StatelessWidget {
-  final int? index;
+  final ConservationStatusModel? status;
   const ConservationStateCard({
     Key? key,
-    required this.index,
+    required this.status,
   }) : super(key: key);
 
   @override
@@ -113,18 +113,18 @@ class ConservationStateCard extends StatelessWidget {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: _getConservationIcon(index!),
+            children: _getConservationIcon(status!.status),
           ),
           Container(
             padding: const EdgeInsets.symmetric(vertical: 10.0),
-            child: Text(_getConservationText(index!)),
+            child: Text(_getConservationText(status!.status)),
           ),
         ],
       ),
     );
   }
 
-  String _getConservationText(int index) {
+  String _getConservationText(int? index) {
     String conservation = '';
     switch (index) {
       case 1:
@@ -161,9 +161,9 @@ class ConservationStateCard extends StatelessWidget {
     return conservation;
   }
 
-  List<Widget> _getConservationIcon(int index) {
+  List<Widget> _getConservationIcon(int? index) {
     List<Widget> list = <Widget>[];
-    if (index >= 1 && index <= 7) {
+    if (index! >= 1 && index <= 7) {
       bool ex = false;
       bool ew = false;
       bool ce = false;
