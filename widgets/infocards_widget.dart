@@ -520,6 +520,13 @@ class _SoundCardState extends State<SoundCard>
         _position = event;
       });
     });
+    _soundPlayer.onPlayerComplete.listen((event) {
+      _soundController.reverse();
+      setState(() {
+        _isPlaying = false;
+        _position = Duration.zero;
+      });
+    });
   }
 
   @override
@@ -532,7 +539,7 @@ class _SoundCardState extends State<SoundCard>
         break;
       }
     }
-
+    _soundPlayer.setSource(UrlSource(_audioPath!));
     return Container(
       margin: const EdgeInsets.symmetric(
         horizontal: 15.0,
