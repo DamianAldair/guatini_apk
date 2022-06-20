@@ -20,4 +20,9 @@ class DomainModel {
         "name": name,
         "description": description,
       };
+
+  @override
+  String toString() {
+    return name.toString();
+  }
 }

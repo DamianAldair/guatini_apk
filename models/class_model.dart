@@ -25,4 +25,9 @@ class ClassModel {
         "description": description,
         "fk_t_phylum_": taxphylum?.id,
       };
+
+  @override
+  String toString() {
+    return name.toString();
+  }
 }

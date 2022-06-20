@@ -16,4 +16,9 @@ class ActivityModel {
         "id": id,
         "activity": activity,
       };
+
+  @override
+  String toString() {
+    return activity!;
+  }
 }

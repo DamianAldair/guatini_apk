@@ -25,4 +25,9 @@ class PhylumModel {
         "description": description,
         "fk_t_kindom_": taxkindom?.id,
       };
+
+  @override
+  String toString() {
+    return name.toString();
+  }
 }

@@ -98,4 +98,12 @@ class SpecieModel {
       medias: medias,
     );
   }
+
+  String get commonNamesAsString {
+    String _names = '';
+    for (var item in commonNames!) {
+      _names += '${item.name}\n';
+    }
+    return _names.substring(0, _names.length - 1);
+  }
 }

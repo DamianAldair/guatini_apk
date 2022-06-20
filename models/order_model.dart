@@ -25,4 +25,9 @@ class OrderModel {
         "description": description,
         "fk_t_class_": taxclass?.id,
       };
+
+  @override
+  String toString() {
+    return name.toString();
+  }
 }

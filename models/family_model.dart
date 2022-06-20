@@ -25,4 +25,9 @@ class FamilyModel {
         "description": description,
         "fk_t_order_": taxorder?.id,
       };
+
+  @override
+  String toString() {
+    return name.toString();
+  }
 }

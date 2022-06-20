@@ -25,4 +25,9 @@ class GenusModel {
         "description": description,
         "fk_t_family_": taxfamily?.id,
       };
+
+  @override
+  String toString() {
+    return name.toString();
+  }
 }

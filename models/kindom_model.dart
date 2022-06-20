@@ -25,4 +25,9 @@ class KindomModel {
         "description": description,
         "fk_t_domain_": taxdomain?.id,
       };
+
+  @override
+  String toString() {
+    return name.toString();
+  }
 }

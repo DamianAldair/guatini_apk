@@ -16,4 +16,9 @@ class DietModel {
         "id": id,
         "diet": diet,
       };
+
+  @override
+  String toString() {
+    return diet!;
+  }
 }

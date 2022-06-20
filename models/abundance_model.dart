@@ -16,4 +16,9 @@ class AbundanceModel {
         "id": id,
         "abundance": abundance,
       };
+
+  @override
+  String toString() {
+    return abundance.toString();
+  }
 }

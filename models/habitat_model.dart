@@ -16,4 +16,9 @@ class HabitatModel {
         "id": id,
         "habitat": habitat,
       };
+
+  @override
+  String toString() {
+    return habitat!;
+  }
 }

@@ -16,4 +16,9 @@ class EndemismModel {
         "id": id,
         "zone": zone,
       };
+
+  @override
+  String toString() {
+    return zone.toString();
+  }
 }
