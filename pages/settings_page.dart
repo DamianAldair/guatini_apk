@@ -25,8 +25,10 @@ class SettingsPage extends StatelessWidget {
           title: const Text('Seleccionar Base de Datos'),
           trailing: const Icon(Icons.chevron_right_rounded),
           onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const SelectDbPage()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const SelectDbPage(notice: true)));
           },
         ),
         const Divider(),

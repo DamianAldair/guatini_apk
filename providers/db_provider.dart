@@ -1,9 +1,5 @@
-import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:guatini/providers/sharedpreferences_provider.dart';
 import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:guatini/global/tools.dart' as tools;
 import 'package:guatini/models/abundance_model.dart';
@@ -42,17 +38,20 @@ class DBProvider {
   }
 
   Future<Database> _initiateDatabase() async {
-    Directory? _dir = await getExternalStorageDirectory();
-    String _path = join(_dir!.path, tools.dbPath);
     final _prefs = UserPreferences();
-    _prefs.dbPath = _path.substring(0, _path.length - 16);
+    final _dirDB = _prefs.dbPath;
+    String _path = join(_dirDB!, tools.dbPath);
     return await openDatabase(
       _path,
       version: 1,
       onCreate: (Database db, int version) async {
-        debugPrint(db.path);
+        print(db.path);
       },
     );
+  }
+
+  reinitiateDatabase() async {
+    _database = await _checkPermission();
   }
 
   Future<MainImageModel?> _getMainImage(Database db, int specieId) async {
@@ -291,48 +290,52 @@ class DBProvider {
   }
 
   Future<SpecieModel?> getSpecie(int specieId) async {
-    final _db = await database;
-    final _query = 'select '
-        '[main].[specie].[id], '
-        '[main].[specie].[scientific_name], '
-        '[main].[specie].[description]'
-        'from   [main].[specie]'
-        'where [main].[specie].[id] = $specieId;';
-    final _result = await _db!.rawQuery(_query);
-    final _mainImage = await _getMainImage(_db, specieId);
-    final _commonNames = await _getCommonNames(_db, specieId);
-    final _taxgenus = await _getGenus(_db, specieId);
-    final _taxfamily = await _getFamily(_db, _taxgenus!.id);
-    final _taxorder = await _getOrder(_db, _taxfamily!.id);
-    final _taxclass = await _getClass(_db, _taxorder!.id);
-    final _taxphylum = await _getPhylum(_db, _taxclass!.id);
-    final _taxkindom = await _getKindom(_db, _taxphylum!.id);
-    final _taxdomain = await _getDomain(_db, _taxkindom!.id);
-    final _conservationStatus = await _getConservationStatus(_db, specieId);
-    final _endemism = await _getEndemism(_db, specieId);
-    final _abundance = await _getAbundance(_db, specieId);
-    final _activities = await _getActivities(_db, specieId);
-    final _habitats = await _getHabitats(_db, specieId);
-    final _diets = await _getDiets(_db, specieId);
-    final _medias = await _getMedias(_db, specieId);
-    return SpecieModel.fromMap(
-      json: _result.first,
-      mainImage: _mainImage,
-      commonNames: _commonNames,
-      taxdomain: _taxdomain,
-      taxkindom: _taxkindom,
-      taxphylum: _taxphylum,
-      taxclass: _taxclass,
-      taxorder: _taxorder,
-      taxfamily: _taxfamily,
-      taxgenus: _taxgenus,
-      conservationStatus: _conservationStatus,
-      endemism: _endemism,
-      abundance: _abundance,
-      activities: _activities,
-      habitats: _habitats,
-      diets: _diets,
-      medias: _medias,
-    );
+    try {
+      final _db = await database;
+      final _query = 'select '
+          '[main].[specie].[id], '
+          '[main].[specie].[scientific_name], '
+          '[main].[specie].[description]'
+          'from   [main].[specie]'
+          'where [main].[specie].[id] = $specieId;';
+      final _result = await _db!.rawQuery(_query);
+      final _mainImage = await _getMainImage(_db, specieId);
+      final _commonNames = await _getCommonNames(_db, specieId);
+      final _taxgenus = await _getGenus(_db, specieId);
+      final _taxfamily = await _getFamily(_db, _taxgenus!.id);
+      final _taxorder = await _getOrder(_db, _taxfamily!.id);
+      final _taxclass = await _getClass(_db, _taxorder!.id);
+      final _taxphylum = await _getPhylum(_db, _taxclass!.id);
+      final _taxkindom = await _getKindom(_db, _taxphylum!.id);
+      final _taxdomain = await _getDomain(_db, _taxkindom!.id);
+      final _conservationStatus = await _getConservationStatus(_db, specieId);
+      final _endemism = await _getEndemism(_db, specieId);
+      final _abundance = await _getAbundance(_db, specieId);
+      final _activities = await _getActivities(_db, specieId);
+      final _habitats = await _getHabitats(_db, specieId);
+      final _diets = await _getDiets(_db, specieId);
+      final _medias = await _getMedias(_db, specieId);
+      return SpecieModel.fromMap(
+        json: _result.first,
+        mainImage: _mainImage,
+        commonNames: _commonNames,
+        taxdomain: _taxdomain,
+        taxkindom: _taxkindom,
+        taxphylum: _taxphylum,
+        taxclass: _taxclass,
+        taxorder: _taxorder,
+        taxfamily: _taxfamily,
+        taxgenus: _taxgenus,
+        conservationStatus: _conservationStatus,
+        endemism: _endemism,
+        abundance: _abundance,
+        activities: _activities,
+        habitats: _habitats,
+        diets: _diets,
+        medias: _medias,
+      );
+    } catch (e) {
+      return null;
+    }
   }
 }

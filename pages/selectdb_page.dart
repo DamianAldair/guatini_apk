@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:guatini/pages/main_page.dart';
+import 'package:guatini/providers/db_provider.dart';
 import 'package:guatini/providers/sharedpreferences_provider.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -43,8 +43,9 @@ class SelectDbPage extends StatelessWidget {
                     ? const Icon(Icons.radio_button_checked_rounded)
                     : const Icon(Icons.radio_button_off_rounded),
                 onTap: () {
+                  DBProvider.instance.reinitiateDatabase();
                   _prefs.dbPath = '${item.path}/';
-                  Navigator.pushNamed(context, '/main');
+                  Navigator.pop(context);
                 },
               ));
             }
