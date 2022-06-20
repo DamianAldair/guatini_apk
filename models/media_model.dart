@@ -44,6 +44,7 @@ class MediaModel {
       };
 
   set mediaType(MediaTypeModel type) => this.type = type;
+  MediaTypeModel get mediaType => type!;
 }
 
 class MainImageModel extends MediaModel {
