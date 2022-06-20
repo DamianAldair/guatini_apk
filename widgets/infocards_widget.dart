@@ -1,6 +1,10 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 import 'package:guatini/global/tools.dart' as tools;
 import 'package:guatini/models/conservationstatus_model.dart';
+import 'package:guatini/models/media_model.dart';
+import 'package:guatini/providers/sharedpreferences_provider.dart';
 
 enum _InfoCardType {
   normal,
@@ -469,7 +473,11 @@ class ConservationStateCard extends StatelessWidget {
 }
 
 class SoundCard extends StatefulWidget {
-  const SoundCard({Key? key}) : super(key: key);
+  final List<MediaModel>? medias;
+  const SoundCard({
+    Key? key,
+    required this.medias,
+  }) : super(key: key);
 
   @override
   State<SoundCard> createState() => _SoundCardState();
@@ -479,8 +487,9 @@ class _SoundCardState extends State<SoundCard>
     with SingleTickerProviderStateMixin {
   bool _isPlaying = false;
   late AnimationController _soundController;
-  Duration _currentTime = const Duration(microseconds: 0);
-  final Duration _totalTime = const Duration(seconds: 30);
+  late AudioPlayer _soundPlayer;
+  Duration _position = Duration();
+  Duration _duration = Duration();
 
   @override
   void initState() {
@@ -488,11 +497,42 @@ class _SoundCardState extends State<SoundCard>
       vsync: this,
       duration: const Duration(milliseconds: 100),
     );
+    _soundPlayer = AudioPlayer();
+    initAudio();
     super.initState();
   }
 
   @override
+  void dispose() {
+    _soundController.dispose();
+    _soundPlayer.dispose();
+    super.dispose();
+  }
+
+  void initAudio() {
+    _soundPlayer.onDurationChanged.listen((event) {
+      setState(() {
+        _duration = event;
+      });
+    });
+    _soundPlayer.onPositionChanged.listen((event) {
+      setState(() {
+        _position = event;
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final _prefs = UserPreferences();
+    String? _audioPath = _prefs.dbPath;
+    for (MediaModel item in widget.medias!) {
+      if (item.mediaType.type == 'Audio') {
+        _audioPath = join(_audioPath!, item.path);
+        break;
+      }
+    }
+
     return Container(
       margin: const EdgeInsets.symmetric(
         horizontal: 15.0,
@@ -525,32 +565,38 @@ class _SoundCardState extends State<SoundCard>
                   if (!_isPlaying) {
                     _soundController.forward();
                     _isPlaying = true;
+                    _soundPlayer.play(UrlSource(_audioPath!));
                   } else {
                     _soundController.reverse();
                     _isPlaying = false;
+                    _soundPlayer.pause();
                   }
                 },
               ),
               Expanded(
                 child: Column(
                   children: [
-                    Slider(
-                      value: _currentTime.inMilliseconds.toDouble(),
-                      max: _totalTime.inMilliseconds.toDouble(),
+                    Slider.adaptive(
+                      value: _position.inMilliseconds.toDouble(),
+                      max: _duration.inMilliseconds.toDouble(),
                       onChanged: (value) {
                         setState(() {
-                          _currentTime = Duration(milliseconds: value.toInt());
+                          _soundPlayer
+                              .seek(Duration(milliseconds: value.toInt()));
+                          _position = Duration(milliseconds: value.toInt());
                         });
                       },
                     ),
                     Row(
                       children: [
                         const SizedBox(width: 30.0),
-                        Text(
-                            '${_currentTime.inMinutes}:${tools.convertToTwoDigits(_currentTime.inSeconds)}'),
+                        Text(_duration != Duration.zero
+                            ? '${_position.inMinutes}:${tools.convertToTwoDigits(_position.inSeconds)}'
+                            : ''),
                         const Expanded(child: SizedBox()),
-                        Text(
-                            '${_totalTime.inMinutes}:${tools.convertToTwoDigits(_totalTime.inSeconds)}'),
+                        Text(_duration != Duration.zero
+                            ? '${_duration.inMinutes}:${tools.convertToTwoDigits(_duration.inSeconds)}'
+                            : ''),
                         const SizedBox(width: 30.0),
                       ],
                     ),
