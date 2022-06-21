@@ -38,15 +38,7 @@ class SpecieDetailPage extends StatelessWidget {
                     padding: const EdgeInsets.all(15.0),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(15.0),
-                      child: FadeInImage(
-                        placeholder:
-                            const AssetImage('assets/images/loading.gif'),
-                        placeholderFit: BoxFit.cover,
-                        image: _getMainImage(specie),
-                        fit: BoxFit.cover,
-                        fadeInDuration: const Duration(milliseconds: 100),
-                        fadeOutDuration: const Duration(milliseconds: 100),
-                      ),
+                      child: _getMainImage(specie),
                     ),
                   ),
                   Text(
@@ -106,6 +98,19 @@ class SpecieDetailPage extends StatelessWidget {
     final _dbPath = _prefs.dbPath;
     return _mediaModel == null
         ? const AssetImage('assets/images/image_not_available.png')
-        : FileImage(File('$_dbPath${_mediaModel.path}'));
+        : FutureBuilder(
+            future: File('$_dbPath${_mediaModel.path}').exists(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData) {
+                if (snapshot.data) {
+                  return Image.file(File('$_dbPath${_mediaModel.path}'));
+                } else {
+                  return Image.asset('assets/images/image_not_available.png');
+                }
+              } else {
+                return Image.asset('assets/images/loading.gif');
+              }
+            },
+          );
   }
 }
