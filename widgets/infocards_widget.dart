@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:path/path.dart';
 import 'package:guatini/global/tools.dart' as tools;
 import 'package:guatini/models/conservationstatus_model.dart';
@@ -488,8 +491,8 @@ class _SoundCardState extends State<SoundCard>
   bool _isPlaying = false;
   late AnimationController _soundController;
   late AudioPlayer _soundPlayer;
-  Duration _position = Duration();
-  Duration _duration = Duration();
+  Duration _position = const Duration();
+  Duration _duration = const Duration();
 
   @override
   void initState() {
@@ -539,8 +542,118 @@ class _SoundCardState extends State<SoundCard>
         break;
       }
     }
-    _soundPlayer.setSource(UrlSource(_audioPath!));
     return Container(
+        margin: const EdgeInsets.symmetric(
+          horizontal: 15.0,
+          vertical: 7.0,
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        height: 110.0,
+        width: double.infinity,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: Colors.black12,
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: FutureBuilder(
+          future: File(_audioPath!).exists(),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.hasData) {
+              if (snapshot.data) {
+                _soundPlayer.setSource(UrlSource(_audioPath!));
+                return Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: const Text('Sonido:'),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        IconButton(
+                          icon: AnimatedIcon(
+                            icon: AnimatedIcons.play_pause,
+                            color: const Color.fromARGB(255, 0, 0, 0),
+                            progress: _soundController,
+                          ),
+                          onPressed: () {
+                            if (!_isPlaying) {
+                              _soundController.forward();
+                              _isPlaying = true;
+                              _soundPlayer.play(UrlSource(_audioPath!));
+                            } else {
+                              _soundController.reverse();
+                              _isPlaying = false;
+                              _soundPlayer.pause();
+                            }
+                          },
+                        ),
+                        Expanded(
+                          child: Column(
+                            children: [
+                              Slider.adaptive(
+                                value: _position.inMilliseconds.toDouble(),
+                                max: _duration.inMilliseconds.toDouble(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    _soundPlayer.seek(
+                                        Duration(milliseconds: value.toInt()));
+                                    _position =
+                                        Duration(milliseconds: value.toInt());
+                                  });
+                                },
+                              ),
+                              Row(
+                                children: [
+                                  const SizedBox(width: 30.0),
+                                  Text(_duration != Duration.zero
+                                      ? '${_position.inMinutes}:${tools.convertToTwoDigits(_position.inSeconds)}'
+                                      : ''),
+                                  const Expanded(child: SizedBox()),
+                                  Text(_duration != Duration.zero
+                                      ? '${_duration.inMinutes}:${tools.convertToTwoDigits(_duration.inSeconds)}'
+                                      : ''),
+                                  const SizedBox(width: 30.0),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+              } else {
+                return Center(
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: 30.0,
+                          bottom: 30.0,
+                          left: 10.0,
+                          right: 20.0,
+                        ),
+                        child: Image.asset(
+                            'assets/images/sound_not_available.png'),
+                      ),
+                      const Flexible(
+                        child: Text(
+                          'Al parecer hay problemas al encontar al archivo de audio.',
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.clip,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+            } else {
+              return const Center(child: CircularProgressIndicator());
+            }
+          },
+        ));
+    /* return Container(
       margin: const EdgeInsets.symmetric(
         horizontal: 15.0,
         vertical: 7.0,
@@ -614,7 +727,7 @@ class _SoundCardState extends State<SoundCard>
           ),
         ],
       ),
-    );
+    ); */
   }
 }
 
