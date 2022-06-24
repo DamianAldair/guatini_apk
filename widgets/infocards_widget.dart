@@ -44,8 +44,10 @@ class InfoCard<T> extends StatelessWidget {
         horizontal: 15.0,
         vertical: 7.0,
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      height: _infoCardType == _InfoCardType.normal ? 40.0 : null,
+      padding: EdgeInsets.symmetric(
+        horizontal: 10.0,
+        vertical: _infoCardType == _InfoCardType.normal ? 10.0 : 0.0,
+      ),
       width: double.infinity,
       alignment: Alignment.center,
       decoration: BoxDecoration(
@@ -106,7 +108,6 @@ class ConservationStateCard extends StatelessWidget {
         horizontal: 15.0,
         vertical: 7.0,
       ),
-      height: 110.0,
       width: double.infinity,
       alignment: Alignment.center,
       decoration: BoxDecoration(
@@ -549,7 +550,6 @@ class _SoundCardState extends State<SoundCard>
           vertical: 7.0,
         ),
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
-        height: 110.0,
         width: double.infinity,
         alignment: Alignment.center,
         decoration: BoxDecoration(
@@ -622,6 +622,7 @@ class _SoundCardState extends State<SoundCard>
                         ),
                       ],
                     ),
+                    const SizedBox(height: 10.0),
                   ],
                 );
               } else {
@@ -636,11 +637,13 @@ class _SoundCardState extends State<SoundCard>
                           right: 20.0,
                         ),
                         child: Image.asset(
-                            'assets/images/sound_not_available.png'),
+                          'assets/images/sound_not_available.png',
+                          height: 50.0,
+                        ),
                       ),
                       const Flexible(
                         child: Text(
-                          'Al parecer hay problemas al encontar al archivo de audio.',
+                          'Al parecer hay problemas al encontar el archivo de audio.',
                           textAlign: TextAlign.center,
                           overflow: TextOverflow.clip,
                         ),
