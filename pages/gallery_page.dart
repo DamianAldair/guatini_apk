@@ -17,19 +17,34 @@ class GalleryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _prefs = UserPreferences();
+    final _dbPath = _prefs.dbPath;
     return Scaffold(
       backgroundColor: Colors.black,
-      body: media!.mediaType.type == MediaType.image
-          ? ImageViewer(media: media)
-          : VideoViewer(media: media),
+      body: FutureBuilder(
+        future: File('$_dbPath${media!.path}').exists(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data) {
+              return media!.mediaType.type == MediaType.image
+                  ? _ImageViewer(media: media)
+                  : _VideoViewer(media: media);
+            } else {
+              return const _NoMediaViewer();
+            }
+          } else {
+            return const CircularProgressIndicator();
+          }
+        },
+      ),
     );
   }
 }
 
-class ImageViewer extends StatelessWidget {
+class _ImageViewer extends StatelessWidget {
   final MediaModel? media;
 
-  const ImageViewer({
+  const _ImageViewer({
     Key? key,
     required this.media,
   }) : super(key: key);
@@ -80,19 +95,19 @@ class ImageViewer extends StatelessWidget {
   }
 }
 
-class VideoViewer extends StatefulWidget {
+class _VideoViewer extends StatefulWidget {
   final MediaModel? media;
 
-  const VideoViewer({
+  const _VideoViewer({
     Key? key,
     required this.media,
   }) : super(key: key);
 
   @override
-  State<VideoViewer> createState() => _VideoViewerState();
+  State<_VideoViewer> createState() => __VideoViewerState();
 }
 
-class _VideoViewerState extends State<VideoViewer> {
+class __VideoViewerState extends State<_VideoViewer> {
   late VideoPlayerController _videoController;
   bool showControls = true;
 
@@ -289,6 +304,64 @@ class _VideoViewerState extends State<VideoViewer> {
                     ),
                   ],
                 ),
+        ],
+      ),
+    );
+  }
+}
+
+class _NoMediaViewer extends StatelessWidget {
+  const _NoMediaViewer({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Stack(
+        children: [
+          Center(
+            child: Image.asset('assets/images/image_not_available.png'),
+          ),
+          Column(
+            children: [
+              Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back),
+                    color: Colors.white,
+                    tooltip: 'Atrás',
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  const Text(
+                    'Error',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20.0,
+                    ),
+                  ),
+                ],
+              ),
+              const Expanded(child: SizedBox()),
+              Container(
+                margin: const EdgeInsets.symmetric(
+                  horizontal: 10.0,
+                  vertical: 30.0,
+                ),
+                padding: const EdgeInsets.all(15.0),
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(150, 220, 220, 220),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: const Text(
+                  'Hubo un error al tratar de cargar el elemento multimedia. Puede que haya sido borrado o movido.',
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
