@@ -1,6 +1,24 @@
+enum MediaType {
+  audio,
+  image,
+  video,
+}
+
+_setType(String type) {
+  if (type == 'Audio') {
+    return MediaType.audio;
+  } else if (type == 'Imagen') {
+    return MediaType.image;
+  } else if (type == 'Video') {
+    return MediaType.video;
+  } else {
+    return;
+  }
+}
+
 class MediaTypeModel {
   final int? id;
-  final String? type;
+  final MediaType? type;
 
   const MediaTypeModel({
     required this.id,
@@ -9,7 +27,7 @@ class MediaTypeModel {
 
   factory MediaTypeModel.fromMap(Map<String, dynamic> json) => MediaTypeModel(
         id: json["id"],
-        type: json["type"],
+        type: _setType(json["type"]),
       );
 
   Map<String, dynamic> toMap() => {

@@ -2,7 +2,8 @@ import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:guatini/models/mediatype_model.dart';
+import 'package:guatini/pages/gallery_page.dart';
 import 'package:path/path.dart';
 import 'package:guatini/global/tools.dart' as tools;
 import 'package:guatini/models/conservationstatus_model.dart';
@@ -537,7 +538,7 @@ class _SoundCardState extends State<SoundCard>
     final _prefs = UserPreferences();
     String? _audioPath = _prefs.dbPath;
     for (MediaModel item in widget.medias!) {
-      if (item.mediaType.type == 'Audio') {
+      if (item.mediaType.type == MediaType.audio) {
         _audioPath = join(_audioPath!, item.path);
         break;
       }
@@ -689,23 +690,69 @@ class Description extends StatelessWidget {
   }
 }
 
-class Gallery extends StatelessWidget {
-  const Gallery({Key? key}) : super(key: key);
+class GalleryCard extends StatelessWidget {
+  final List<MediaModel>? medias;
+
+  const GalleryCard({
+    Key? key,
+    required this.medias,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        if (snapshot.hasData) {
-          return _createGallery();
-        } else {
-          return const Center(child: CircularProgressIndicator());
-        }
-      },
+    List<MediaModel> _gallery = [];
+    for (var item in medias!) {
+      if (item.mediaType.type != MediaType.audio) {
+        _gallery.add(item);
+      }
+    }
+    return Column(
+      children: [
+        const Padding(
+          padding: EdgeInsets.only(
+            top: 15.0,
+            bottom: 10.0,
+          ),
+          child: Text(
+            'Galería',
+            style: TextStyle(
+              fontSize: 20.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 200.0,
+          child: PageView.builder(
+            controller: PageController(
+              viewportFraction: 0.6,
+            ),
+            pageSnapping: false,
+            itemCount: _gallery.length,
+            itemBuilder: (BuildContext context, int i) {
+              return Container(
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: GestureDetector(
+                  child: Hero(
+                    tag: _gallery[i].id!,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20.0),
+                      child: tools.getThumbnail(_gallery[i]),
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                GalleryPage(media: _gallery[i])));
+                  },
+                ),
+              );
+            },
+          ),
+        ),
+      ],
     );
-  }
-
-  Widget _createGallery() {
-    return Container();
   }
 }
