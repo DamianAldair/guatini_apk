@@ -32,8 +32,9 @@ class SelectDbPage extends StatelessWidget {
       builder: (BuildContext context, AsyncSnapshot<Directory?> snapshot) {
         if (snapshot.hasData) {
           final List<FileSystemEntity>? _dirList = snapshot.data?.listSync();
+          _dirList!.sort((a, b) => a.path.compareTo(b.path));
           List<Widget> _dbList = [];
-          for (FileSystemEntity item in _dirList!) {
+          for (FileSystemEntity item in _dirList) {
             if (item is Directory && _dbExist(item)) {
               List<String> _splitPath = item.path.split('/');
               final _prefs = UserPreferences();
