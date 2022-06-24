@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:guatini/pages/main_page.dart';
 import 'package:guatini/providers/db_provider.dart';
 import 'package:guatini/providers/sharedpreferences_provider.dart';
 import 'package:path_provider/path_provider.dart';
@@ -45,7 +46,15 @@ class SelectDbPage extends StatelessWidget {
                 onTap: () {
                   DBProvider.instance.reinitiateDatabase();
                   _prefs.dbPath = '${item.path}/';
-                  Navigator.pop(context);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const MainPage()));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Base de datos cambiada a : ${item.path}'),
+                    ),
+                  );
                 },
               ));
             }
