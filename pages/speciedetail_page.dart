@@ -68,8 +68,8 @@ class SpecieDetailPage extends StatelessWidget {
                   InfoCard.extended(field: 'Dieta', instances: specie.diets),
                   SoundCard(medias: specie.medias),
                   Description(description: '${specie.description}'),
-                  const Gallery(),
-                  const SizedBox(height: 10.0),
+                  Gallery(medias: specie.medias),
+                  const SizedBox(height: 20.0),
                 ],
               ),
             );

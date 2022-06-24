@@ -690,10 +690,10 @@ class Description extends StatelessWidget {
   }
 }
 
-class GalleryCard extends StatelessWidget {
+class Gallery extends StatelessWidget {
   final List<MediaModel>? medias;
 
-  const GalleryCard({
+  const Gallery({
     Key? key,
     required this.medias,
   }) : super(key: key);
