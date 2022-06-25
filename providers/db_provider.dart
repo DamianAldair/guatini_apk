@@ -1,3 +1,4 @@
+import 'package:guatini/models/specie_search_model.dart';
 import 'package:guatini/providers/sharedpreferences_provider.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -336,6 +337,30 @@ class DBProvider {
       );
     } catch (e) {
       return null;
+    }
+  }
+
+  Future<List<SpecieFromSimpleSearch>> searchSpecie(String query) async {
+    try {
+      final _db = await database;
+      final _query = 'select '
+          '[main].[specie].[id], '
+          '[main].[common_name].[name], '
+          '[main].[specie].[scientific_name], '
+          '[main].[media].[path]'
+          'from   [main].[specie]'
+          'inner join [main].[media] on [main].[specie].[id] = [main].[media].[fk_specie_]'
+          'inner join [main].[main_image] on [main].[media].[id] = [main].[main_image].[fk_media_]'
+          'inner join [main].[common_name] on [main].[specie].[id] = [main].[common_name].[fk_specie_]'
+          'where [main].[common_name].[name] LIKE \'%$query%\' OR [main].[specie].[scientific_name] LIKE \'%$query%\';';
+      final _result = await _db!.rawQuery(_query);
+      final _results = <SpecieFromSimpleSearch>[];
+      for (var item in _result) {
+        _results.add(SpecieFromSimpleSearch.fromMap(item));
+      }
+      return _results;
+    } catch (e) {
+      return [];
     }
   }
 }

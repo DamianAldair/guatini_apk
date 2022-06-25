@@ -6,9 +6,7 @@ class UserPreferences {
 
   UserPreferences._();
 
-  factory UserPreferences() {
-    return _instance;
-  }
+  factory UserPreferences() => _instance;
 
   SharedPreferences? _userPreferences;
 
@@ -16,10 +14,24 @@ class UserPreferences {
     _userPreferences = await SharedPreferences.getInstance();
   }
 
-  String? get dbPath {
-    return _userPreferences!.getString(tools.keyDBPath);
-  }
+  String? get dbPath => _userPreferences!.getString(tools.keyDBPath);
 
   set dbPath(String? value) =>
       _userPreferences!.setString(tools.keyDBPath, value!);
+
+  List<String>? get last5Searches {
+    return _userPreferences!.getStringList(tools.keyLastSearches) ?? [];
+  }
+
+  newSearch(String newSearch) {
+    List<String> _list = last5Searches!;
+    if (_list.contains(newSearch)) {
+      _list.remove(newSearch);
+    }
+    _list.add(newSearch);
+    if (_list.length > 5) {
+      _list.removeAt(0);
+    }
+    _userPreferences!.setStringList(tools.keyLastSearches, _list);
+  }
 }
